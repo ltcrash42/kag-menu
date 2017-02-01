@@ -8,6 +8,7 @@
   },
   "author": "Patrick Greer",
   "email": "p.greer688@gmail.com",
+  "license": "Apache 2.0",
   "devDependencies": {
     "electron": "^1.4.1"
   }
