@@ -1,0 +1,14 @@
+{
+  "name": "kag-menu",
+  "version": "1.0.0",
+  "description": "A menu tracker for KAG",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Patrick Greer",
+  "email": "p.greer688@gmail.com",
+  "devDependencies": {
+    "electron": "^1.4.1"
+  }
+}
