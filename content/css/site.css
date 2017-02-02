@@ -1,0 +1,23 @@
+body {
+    background-color: #375a7f;
+    margin-bottom: 5%;
+    margin-top: 5%;
+}
+.navbar .form-group{
+  margin-top: .5em;
+}
+.navbar {
+  background-color: #EEE;
+}
+.ag-bootstrap .ag-header {
+  background-color: #f6f6f6;
+}
+.ag-header-cell {
+  text-align: left;
+}
+.ag-bootstrap .ag-row-odd {
+  background-color: #c9d8e8;
+}
+.ag-bootstrap .ag-row-even {
+  background-color: #EEE;
+}
