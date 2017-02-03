@@ -2,6 +2,8 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 const agGrid = require('ag-grid');
+const jsonFile = require('jsonfile');
+jsonFile.spaces = 4;
 
 var columnDefs = [
         { headerName: 'Entr&eacute;e', field: 'entree', filter: 'text', width: 250 },
@@ -12,7 +14,7 @@ var columnDefs = [
         { headerName: 'Date', field: 'date', filter: 'text', width: 125 }
     ];
 
-
+/*
 var rowData = [
     {entree: "Gyro", hotMeals: 143, totalMeals: 268, sales: 561.00, dayOfWeek: 'Monday', date: '1-1-2017'},
     {entree: "Baked Chicken", hotMeals: 158, totalMeals: 272, sales: 596.00, dayOfWeek: 'Tuesday', date: '1-2-2017'},
@@ -20,7 +22,7 @@ var rowData = [
     {entree: "Charbroiled CAB Sirloin", hotMeals: 158, totalMeals: 289, sales: 597.50, dayOfWeek: 'Thursday', date: '1-4-2017'},
     {entree: "Broiled Grouper", hotMeals: 155, totalMeals: 227, sales: 524.50, dayOfWeek: 'Friday', date: '1-5-2017'}
 ];
-
+*/
 var gridOptions = {
         columnDefs: columnDefs,
         rowSelection: 'multiple',
@@ -29,10 +31,13 @@ var gridOptions = {
         enableFilter: true,
         enableRangeSelection: true,
         suppressRowClickSelection: true,
+        suppressCellSelection: true,
+        singleClickEdit: true,
         rowHeight: 22,
-        animateRows: true,
+        animateRows: false,
         onModelUpdated: modelUpdated,
-        debug: true,
+        debug: false,
+        suppressClickEdit: false,
         headerCellTemplate : '<div class="ag-header-cell">' +
         '<div id="agResizeBar" class="ag-header-cell-resize"></div>' +
         '<span id="agMenu" style="float: right; padding: 2px; margin-top: 4px; margin-left: 2px;"><i class="fa fa-bars"></i></span>' +
@@ -54,12 +59,18 @@ var btDestroyGrid;
 document.addEventListener("DOMContentLoaded", function() {
     btBringGridBack = document.querySelector('#btBringGridBack');
     btDestroyGrid = document.querySelector('#btDestroyGrid');
+    var btReadJsonFile = document.querySelector('#btReadJsonFile');
+    var btWriteJsonFile = document.querySelector('#btWriteJsonFile');
+    var btAddEntree = document.querySelector('#btAddEntree');
 
     // this example is also used in the website landing page, where
     // we don't display the buttons, so we check for the buttons existance
     if (btBringGridBack) {
         btBringGridBack.addEventListener('click', onBtBringGridBack);
         btDestroyGrid.addEventListener('click', onBtDestroyGrid);
+        btReadJsonFile.addEventListener('click', onBtReadJsonFile);
+        btWriteJsonFile.addEventListener('click', onBtWriteJsonFile);
+        btAddEntree.addEventListener('click', onBtAddEntree);
     }
 
     addQuickFilterListener();
@@ -73,13 +84,70 @@ function onBtBringGridBack() {
         btBringGridBack.disabled = true;
         btDestroyGrid.disabled = false;
     }
-    gridOptions.api.setRowData(rowData);
+    jsonFile.readFile('data.json', function(err,obj) {
+      gridOptions.api.setRowData(obj);
+    });
 }
 
 function onBtDestroyGrid() {
     btBringGridBack.disabled = false;
     btDestroyGrid.disabled = true;
     gridOptions.api.destroy();
+}
+
+function onBtReadJsonFile() {
+    jsonFile.readFile('data.json', function(err,obj) {
+      console.dir(obj);
+    });
+}
+
+function onBtWriteJsonFile() {
+    jsonFile.readFile('data.json', function(err, obj) {
+      if(obj !== null && obj !== undefined){
+        jsonFile.writeFile('data-bkup.json', obj);
+      }
+      for(var i = 0; i <= 1000; i++){
+        obj.push({
+            "entree": "Gyro",
+            "hotMeals": Math.random(),
+            "totalMeals": Math.random(),
+            "sales": Math.random(),
+            "dayOfWeek": "Monday",
+            "date": "1-1-2017"
+        });
+      }
+      jsonFile.writeFile('data.json', obj);
+      console.log('write complete');
+    });
+}
+
+function onBtAddEntree() {
+  var entreeInput = document.querySelector('#entreInput');
+  var hotMealsInput = document.querySelector('#hotMealsInput');
+  var totalMealsInput = document.querySelector('#totalMealsInput');
+  var salesInput = document.querySelector('#salesInput');
+  var dateInput = document.querySelector('#dateInput');
+  var date = new Date(dateInput.value);
+  var dayOfWeek = date.getDay();
+
+  jsonFile.readFile('data.json', function(err, obj) {
+      obj.push({
+          "entree":entreeInput.value,
+          "hotMeals":parseInt(hotMealsInput.value),
+          "totalMeals":parseInt(totalMealsInput.value),
+          "sales":parseFloat(salesInput.value),
+          "dayOfWeek":getWeekday(dayOfWeek),
+          "date":date.toLocaleDateString('en-US')
+      });
+      jsonFile.writeFile('data.json', obj);
+      gridOptions.api.destroy();
+      onBtBringGridBack();
+      entreeInput.value = '';
+      hotMealsInput.value = '';
+      totalMealsInput.value = '';
+      salesInput.value = '';
+      dateInput.value = '';
+  });
 }
 
 function addQuickFilterListener() {
@@ -96,4 +164,16 @@ function modelUpdated() {
     var processedRows = model.getRowCount();
   //  var eSpan = document.querySelector('#rowCount');
   //  eSpan.innerHTML = processedRows.toLocaleString() + ' / ' + totalRows.toLocaleString();
+}
+
+function getWeekday(dayInt){
+  switch(dayInt){
+    case 0: return 'Sunday';
+    case 1: return 'Monday';
+    case 2: return 'Tuesday';
+    case 3: return 'Wednesday';
+    case 4: return 'Thursday';
+    case 5: return 'Friday';
+    case 6: return 'Saturday';
+  }
 }

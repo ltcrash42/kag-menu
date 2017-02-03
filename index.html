@@ -5,13 +5,11 @@
     <title>KAG Menu</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="./content/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="./content/css/bootstrap.theme.min.css" />
+    <link rel="stylesheet" href="./content/css/bootstrap-theme.min.css" />
     <link rel="stylesheet" href="./content/css/font-awesome.min.css" />
     <link rel="stylesheet" href="./content/css/ag-grid.css"  />
     <link rel="stylesheet" href="./content/css/ag-grid-theme-bootstrap.css"  />
     <link rel="stylesheet" href="./content/css/site.css"  />
-    <script src="./content/js/jquery-3.1.1.min.js"></script>
-    <script src="./content/js/bootstrap.min.js"></script>
   </head>
   <body>
     <!--<h1>KAG Menu</h1>
@@ -33,22 +31,50 @@
         </div>
       -->
 
-    <!-- Header -->
+    <!-- Header
     <div class="navbar navbar-default navbar-fixed-top nav-to-front">
       <div class="container">
         <div class="nav navbar-nav navbar-left form-inline">
           <div class="form-group">
-            <input type="text" class="form-control" id="quickFilterInput" placeholder="Type text to filter..."/>
-            <button type="checkbox" class="btn btn-default" id="btDestroyGrid">Destroy Grid</button>
-            <button type="checkbox" class="btn btn-default" id="btBringGridBack">Create Grid</button>
+            <button type="button" class="btn btn-default" id="btDestroyGrid">Destroy Grid</button>
+            <button type="button" class="btn btn-default" id="btBringGridBack">Create Grid</button>
+            <button type="button" class="btn btn-default" id="btReadJsonFile">Read File</button>
+            <button type="button" class="btn btn-default" id="btWriteJsonFile">Write File</button>
           </div>
         </div>
       </div>
     </div>
-
+-->
     <!-- Body -->
     <div class="container">
-      <div style="width: 100%; height: 400px;" id="bestHtml5Grid" class="ag-bootstrap ag-basic"></div>
+      <div class="well">
+        <form action="javascript:void(0);" class="form-inline">
+          <div class="form-group">
+            <input type="text" class="form-control" id="entreInput" placeholder="Entr&eacute;e" />
+          </div>
+          <div class="form-group">
+            <input type="number" class="form-control" id="hotMealsInput" placeholder="Hot Meals" />
+          </div>
+          <div class="form-group">
+            <input type="number" class="form-control" id="totalMealsInput" placeholder="Total Meals" />
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="exampleInputAmount">Sales (in dollars)</label>
+            <div class="input-group">
+              <div class="input-group-addon">$</div>
+              <input type="number" class="form-control" id="salesInput" placeholder="Sales">
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="date" class="form-control" id="dateInput" placeholder="Date" />
+          </div>
+          <button type="submit" class="btn btn-default" id="btAddEntree">Add Entr&eacute;e</button>
+        </form>
+      </div>
+      <div class="well">
+        <input type="text" class="form-control width-400" id="quickFilterInput" placeholder="Type text to filter..."/>
+      </div>
+      <div style="width: 100%; height: 400px;" id="bestHtml5Grid" class="ag-bootstrap ag-basic well"></div>
     </div>
   </body>
 

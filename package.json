@@ -13,6 +13,7 @@
     "electron": "^1.4.1"
   },
   "dependencies": {
-    "ag-grid": "^7.2.2"
+    "ag-grid": "^7.2.2",
+    "jsonfile": "^2.4.0"
   }
 }
