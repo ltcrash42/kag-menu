@@ -14,15 +14,6 @@ var columnDefs = [
         { headerName: 'Date', field: 'date', filter: 'text', width: 125 }
     ];
 
-/*
-var rowData = [
-    {entree: "Gyro", hotMeals: 143, totalMeals: 268, sales: 561.00, dayOfWeek: 'Monday', date: '1-1-2017'},
-    {entree: "Baked Chicken", hotMeals: 158, totalMeals: 272, sales: 596.00, dayOfWeek: 'Tuesday', date: '1-2-2017'},
-    {entree: "Maple Glazed Porkloin", hotMeals: 134, totalMeals: 255, sales: 535.50, dayOfWeek: 'Wednesday', date: '1-3-2017'},
-    {entree: "Charbroiled CAB Sirloin", hotMeals: 158, totalMeals: 289, sales: 597.50, dayOfWeek: 'Thursday', date: '1-4-2017'},
-    {entree: "Broiled Grouper", hotMeals: 155, totalMeals: 227, sales: 524.50, dayOfWeek: 'Friday', date: '1-5-2017'}
-];
-*/
 var gridOptions = {
         columnDefs: columnDefs,
         rowSelection: 'multiple',
@@ -57,68 +48,29 @@ var btDestroyGrid;
 // wait for the document to be loaded, otherwise
 // ag-Grid will not find the div in the document.
 document.addEventListener("DOMContentLoaded", function() {
-    btBringGridBack = document.querySelector('#btBringGridBack');
-    btDestroyGrid = document.querySelector('#btDestroyGrid');
-    var btReadJsonFile = document.querySelector('#btReadJsonFile');
-    var btWriteJsonFile = document.querySelector('#btWriteJsonFile');
     var btAddEntree = document.querySelector('#btAddEntree');
 
     // this example is also used in the website landing page, where
     // we don't display the buttons, so we check for the buttons existance
-    if (btBringGridBack) {
-        btBringGridBack.addEventListener('click', onBtBringGridBack);
-        btDestroyGrid.addEventListener('click', onBtDestroyGrid);
-        btReadJsonFile.addEventListener('click', onBtReadJsonFile);
-        btWriteJsonFile.addEventListener('click', onBtWriteJsonFile);
+    if (btAddEntree) {
         btAddEntree.addEventListener('click', onBtAddEntree);
     }
 
     addQuickFilterListener();
-    onBtBringGridBack();
+    initializeGrid();
 });
 
-function onBtBringGridBack() {
-    var eGridDiv = document.querySelector('#bestHtml5Grid');
+function initializeGrid() {
+    var eGridDiv = document.querySelector('#dataGrid');
     new agGrid.Grid(eGridDiv, gridOptions);
-    if (btBringGridBack) {
-        btBringGridBack.disabled = true;
-        btDestroyGrid.disabled = false;
-    }
+
     jsonFile.readFile('data.json', function(err,obj) {
       gridOptions.api.setRowData(obj);
     });
 }
 
-function onBtDestroyGrid() {
-    btBringGridBack.disabled = false;
-    btDestroyGrid.disabled = true;
+function destroyGrid() {
     gridOptions.api.destroy();
-}
-
-function onBtReadJsonFile() {
-    jsonFile.readFile('data.json', function(err,obj) {
-      console.dir(obj);
-    });
-}
-
-function onBtWriteJsonFile() {
-    jsonFile.readFile('data.json', function(err, obj) {
-      if(obj !== null && obj !== undefined){
-        jsonFile.writeFile('data-bkup.json', obj);
-      }
-      for(var i = 0; i <= 1000; i++){
-        obj.push({
-            "entree": "Gyro",
-            "hotMeals": Math.random(),
-            "totalMeals": Math.random(),
-            "sales": Math.random(),
-            "dayOfWeek": "Monday",
-            "date": "1-1-2017"
-        });
-      }
-      jsonFile.writeFile('data.json', obj);
-      console.log('write complete');
-    });
 }
 
 function onBtAddEntree() {
@@ -140,8 +92,8 @@ function onBtAddEntree() {
           "date":date.toLocaleDateString('en-US')
       });
       jsonFile.writeFile('data.json', obj);
-      gridOptions.api.destroy();
-      onBtBringGridBack();
+      destroyGrid();
+      initializeGrid();
       entreeInput.value = '';
       hotMealsInput.value = '';
       totalMealsInput.value = '';

@@ -12,40 +12,6 @@
     <link rel="stylesheet" href="./content/css/site.css"  />
   </head>
   <body>
-    <!--<h1>KAG Menu</h1>
-     All of the Node.js APIs are available in this renderer process.
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.-->
-        <!--
-        <div style="padding: 4px">
-            <div style="float: right;">
-                <input type="text" id="quickFilterInput" placeholder="Type text to filter..."/>
-                <button type="checkbox" id="btDestroyGrid">Destroy Grid</button>
-                <button type="checkbox" id="btBringGridBack">Create Grid</button>
-            </div>
-            <div style="padding: 4px;">
-                <b>Meals</b> <span id="rowCount"/>
-            </div>
-            <div style="clear: both;"/>
-        </div>
-      -->
-
-    <!-- Header
-    <div class="navbar navbar-default navbar-fixed-top nav-to-front">
-      <div class="container">
-        <div class="nav navbar-nav navbar-left form-inline">
-          <div class="form-group">
-            <button type="button" class="btn btn-default" id="btDestroyGrid">Destroy Grid</button>
-            <button type="button" class="btn btn-default" id="btBringGridBack">Create Grid</button>
-            <button type="button" class="btn btn-default" id="btReadJsonFile">Read File</button>
-            <button type="button" class="btn btn-default" id="btWriteJsonFile">Write File</button>
-          </div>
-        </div>
-      </div>
-    </div>
--->
-    <!-- Body -->
     <div class="container">
       <div class="well">
         <form action="javascript:void(0);" class="form-inline">
@@ -74,7 +40,7 @@
       <div class="well">
         <input type="text" class="form-control width-400" id="quickFilterInput" placeholder="Type text to filter..."/>
       </div>
-      <div style="width: 100%; height: 400px;" id="bestHtml5Grid" class="ag-bootstrap ag-basic well"></div>
+      <div style="width: 100%; height: 500px;" id="dataGrid" class="ag-bootstrap ag-basic well"></div>
     </div>
   </body>
 
