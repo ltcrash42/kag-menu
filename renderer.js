@@ -6,29 +6,30 @@ const jsonFile = require('jsonfile');
 jsonFile.spaces = 4;
 
 var columnDefs = [
-        { headerName: 'Entr&eacute;e', field: 'entree', filter: 'text', width: 250 },
-        { headerName: 'Hot Meals', field: 'hotMeals', filter: 'number', width: 125 },
-        { headerName: 'Total Meals', field: 'totalMeals', filter: 'number', width: 125 },
-        { headerName: 'Sales', field: 'sales', width: 125 },
-        { headerName: 'Day of Week', field: 'dayOfWeek', filter: 'text', width: 125 },
+        { headerName: 'Id', field: 'id', hide: true},
+        { headerName: 'Entr&eacute;e', field: 'entree', filter: 'text', width: 450 },
+        { headerName: 'Hot Meals', field: 'hotMeals', filter: 'number', width: 130 },
+        { headerName: 'Total Meals', field: 'totalMeals', filter: 'number', width: 130 },
+        { headerName: 'Sales', field: 'sales', width: 130, cellRenderer: SalesCellRenderer },
+        { headerName: 'Day of Week', field: 'dayOfWeek', filter: 'text', width: 135,
+          values:['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        },
         { headerName: 'Date', field: 'date', filter: 'text', width: 125 }
     ];
 
 var gridOptions = {
         columnDefs: columnDefs,
-        rowSelection: 'multiple',
+        rowSelection: 'single',
         enableColResize: true,
         enableSorting: true,
         enableFilter: true,
-        enableRangeSelection: true,
-        suppressRowClickSelection: true,
-        suppressCellSelection: true,
-        singleClickEdit: true,
-        rowHeight: 22,
-        animateRows: false,
-        onModelUpdated: modelUpdated,
         debug: false,
-        suppressClickEdit: false,
+        defaultColDef: {
+          editable: false,
+          suppressMovable: true
+        },
+        suppressCellSelection: true,
+        suppressRowClickSelection: false,
         headerCellTemplate : '<div class="ag-header-cell">' +
         '<div id="agResizeBar" class="ag-header-cell-resize"></div>' +
         '<span id="agMenu" style="float: right; padding: 2px; margin-top: 4px; margin-left: 2px;"><i class="fa fa-bars"></i></span>' +
@@ -42,18 +43,20 @@ var gridOptions = {
         '</div>'
     };
 
-var btBringGridBack;
-var btDestroyGrid;
+var formAddEntree;
 
 // wait for the document to be loaded, otherwise
 // ag-Grid will not find the div in the document.
 document.addEventListener("DOMContentLoaded", function() {
     var btAddEntree = document.querySelector('#btAddEntree');
+    var btRemoveSelected = document.querySelector('#btRemoveSelected');
+    var btDeselectAll = document.querySelector('#btDeselectAll');
+    formAddEntree = $('#formAddEntree');
 
-    // this example is also used in the website landing page, where
-    // we don't display the buttons, so we check for the buttons existance
     if (btAddEntree) {
         btAddEntree.addEventListener('click', onBtAddEntree);
+        btRemoveSelected.addEventListener('click', onRemoveSelected);
+        btDeselectAll.addEventListener('click', deselectAll);
     }
 
     addQuickFilterListener();
@@ -63,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function initializeGrid() {
     var eGridDiv = document.querySelector('#dataGrid');
     new agGrid.Grid(eGridDiv, gridOptions);
-
+    gridOptions.api.addEventListener('rowSelected', onSelected);
     jsonFile.readFile('data.json', function(err,obj) {
       gridOptions.api.setRowData(obj);
     });
@@ -73,6 +76,22 @@ function destroyGrid() {
     gridOptions.api.destroy();
 }
 
+function onSelected(){
+  var selected = gridOptions.api.getSelectedRows();
+  if(selected != undefined && selected.length > 0)
+  {
+    $('#btRemoveSelected').prop('disabled', false);
+  }
+  else {
+    $('#btRemoveSelected').prop('disabled', true);
+  }
+}
+
+function deselectAll() {
+  gridOptions.api.deselectAll();
+  $('.ag-bootstrap .ag-cell-focus').removeClass('ag-cell-focus');
+}
+
 function onBtAddEntree() {
   var entreeInput = document.querySelector('#entreInput');
   var hotMealsInput = document.querySelector('#hotMealsInput');
@@ -80,26 +99,45 @@ function onBtAddEntree() {
   var salesInput = document.querySelector('#salesInput');
   var dateInput = document.querySelector('#dateInput');
   var date = new Date(dateInput.value);
-  var dayOfWeek = date.getDay();
+  var dayOfWeek = date.getUTCDay();
+
+  var invalidFields = formAddEntree.find(':invalid');
+  invalidFields.each(function(){
+    $(this).parents('.form-group').addClass('has-error');
+  });
+  if(invalidFields.length > 0){return false;}
+
+  var newEntree = {
+      "id":guid(),
+      "entree":entreeInput.value,
+      "hotMeals":parseInt(hotMealsInput.value),
+      "totalMeals":parseInt(totalMealsInput.value),
+      "sales":parseFloat(salesInput.value),
+      "dayOfWeek":getWeekday(dayOfWeek),
+      "date":dateInput.value
+  };
 
   jsonFile.readFile('data.json', function(err, obj) {
-      obj.push({
-          "entree":entreeInput.value,
-          "hotMeals":parseInt(hotMealsInput.value),
-          "totalMeals":parseInt(totalMealsInput.value),
-          "sales":parseFloat(salesInput.value),
-          "dayOfWeek":getWeekday(dayOfWeek),
-          "date":date.toLocaleDateString('en-US')
-      });
+      if(!obj){obj = [];}
+      obj.push(newEntree);
       jsonFile.writeFile('data.json', obj);
-      destroyGrid();
-      initializeGrid();
-      entreeInput.value = '';
-      hotMealsInput.value = '';
-      totalMealsInput.value = '';
-      salesInput.value = '';
-      dateInput.value = '';
+      gridOptions.api.addItems([newEntree]);
+      formAddEntree.find('input').each(function(){
+        $(this).parents('.form-group').removeClass('has-error');
+        $(this).val('');
+      });
   });
+  return false;
+}
+
+function onRemoveSelected(){
+    var selectedNodes = gridOptions.api.getSelectedNodes();
+    gridOptions.api.removeItems(selectedNodes);
+    jsonFile.readFile('data.json', function(err, obj){
+      var selected = obj.map(function(e) {return e.id;}).indexOf(selectedNodes[0].data.id);
+      obj.splice(selected, 1);
+      jsonFile.writeFile('data.json', obj);
+    });
 }
 
 function addQuickFilterListener() {
@@ -110,12 +148,21 @@ function addQuickFilterListener() {
     });
 }
 
-function modelUpdated() {
-    var model = gridOptions.api.getModel();
-    var totalRows = model.getTopLevelNodes().length;
-    var processedRows = model.getRowCount();
-  //  var eSpan = document.querySelector('#rowCount');
-  //  eSpan.innerHTML = processedRows.toLocaleString() + ' / ' + totalRows.toLocaleString();
+function SalesCellRenderer(){
+
+}
+
+SalesCellRenderer.prototype.init = function (params) {
+    if (params.value === "" || params.value === undefined || params.value === null) {
+        this.eGui = '';
+    } else {
+        var dollar = '<span class="fa fa-dollar"></span>';
+        this.eGui = dollar + params.value;
+    }
+};
+
+SalesCellRenderer.prototype.getGui = function() {
+    return this.eGui;
 }
 
 function getWeekday(dayInt){
@@ -128,4 +175,15 @@ function getWeekday(dayInt){
     case 5: return 'Friday';
     case 6: return 'Saturday';
   }
+}
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
 }

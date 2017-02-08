@@ -1,4 +1,6 @@
+// build script: electron-packager . --win64 --icon='C:\Apps\kag-menu\favicon.ico' --out='C:\Apps\installers'
 const electron = require('electron')
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.

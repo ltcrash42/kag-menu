@@ -1,19 +1,42 @@
 {
-  "name": "kag-menu",
+  "name": "kag-menu-tracker",
   "version": "1.0.0",
-  "description": "A menu tracker for KAG",
+  "title": "KAG Menu Tracker",
+  "description": "A menu tracker for the KAG Cafeteria",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "build --dir --win --x64",
+    "dist": "build --win --x64"
   },
   "author": "Patrick Greer",
   "email": "p.greer688@gmail.com",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/ltcrash42/kag-menu",
+  "repository": "https://github.com/ltcrash42/kag-menu",
+  "setup_icon": "https://github.com/ltcrash42/kag-menu/blob/master/build/icon.ico",
   "devDependencies": {
-    "electron": "^1.4.1"
+    "electron": "^1.4.1",
+    "electron-builder": "^12.3.1",
+    "electron-winstaller": "^2.5.2"
   },
   "dependencies": {
     "ag-grid": "^7.2.2",
     "jsonfile": "^2.4.0"
+  },
+  "build": {
+    "appId":"kag.menu.tracker",
+    "productName": "KAG Menu Tracker",
+    "allowToChangeInstallationDirectory": true,
+    "win": {
+      "appId":"kag.menu.tracker",
+      "title": "KAG Menu Tracker",
+      "version": "1.0.0"
+    },
+    "squirrelWindows": {
+      "iconUrl": "https://github.com/ltcrash42/kag-menu/blob/master/build/icon.ico",
+      "msi": true,
+      "useAppIdAsId": true
+    }
   }
 }

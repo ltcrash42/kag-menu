@@ -13,18 +13,25 @@ body {
 .ag-header-cell {
   text-align: left;
 }
+
+.ag-bootstrap .ag-row-odd.ag-row-selected,
+.ag-bootstrap .ag-row-even.ag-row-selected {
+  background-color: #51bac8;
+}
+
 .ag-bootstrap .ag-row-odd {
   background-color: #c9d8e8;
 }
 .ag-bootstrap .ag-row-even {
   background-color: #f6f6f6;
 }
+
 .ag-bootstrap .ag-body {
   background-color: inherit;
 }
 .well .form-inline .form-control {
   max-width: 190px;
 }
-.width-400 {
+.form-inline .form-control.width-400 {
   width:400px;
 }

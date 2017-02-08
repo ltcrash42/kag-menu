@@ -14,36 +14,46 @@
   <body>
     <div class="container">
       <div class="well">
-        <form action="javascript:void(0);" class="form-inline">
+        <form action="javascript:void(0);"  class="form-inline" id="formAddEntree">
           <div class="form-group">
-            <input type="text" class="form-control" id="entreInput" placeholder="Entr&eacute;e" />
+            <input type="text" class="form-control" id="entreInput" placeholder="Entr&eacute;e" required/>
           </div>
           <div class="form-group">
-            <input type="number" class="form-control" id="hotMealsInput" placeholder="Hot Meals" />
+            <input type="number" class="form-control" id="hotMealsInput" placeholder="Hot Meals"  required/>
           </div>
           <div class="form-group">
-            <input type="number" class="form-control" id="totalMealsInput" placeholder="Total Meals" />
+            <input type="number" class="form-control" id="totalMealsInput" placeholder="Total Meals"  required/>
           </div>
           <div class="form-group">
             <label class="sr-only" for="exampleInputAmount">Sales (in dollars)</label>
             <div class="input-group">
-              <div class="input-group-addon">$</div>
-              <input type="number" class="form-control" id="salesInput" placeholder="Sales">
+              <div class="input-group-addon"><span class="fa fa-dollar"></span></div>
+              <input type="number" class="form-control" id="salesInput" placeholder="Sales" required>
             </div>
           </div>
           <div class="form-group">
-            <input type="date" class="form-control" id="dateInput" placeholder="Date" />
+            <input type="date" class="form-control" id="dateInput" placeholder="Date"  required/>
           </div>
-          <button type="submit" class="btn btn-default" id="btAddEntree">Add Entr&eacute;e</button>
+          <button type="submit" class="btn btn-primary" id="btAddEntree">Add Entr&eacute;e</button>
         </form>
       </div>
-      <div class="well">
+      <div class="well form-group form-inline">
         <input type="text" class="form-control width-400" id="quickFilterInput" placeholder="Type text to filter..."/>
+        <button class="btn btn-danger" disabled id="btRemoveSelected" >Remove Selected</button>
+        <button class="btn btn-default" id="btDeselectAll" >Deselect All</button>
       </div>
       <div style="width: 100%; height: 500px;" id="dataGrid" class="ag-bootstrap ag-basic well"></div>
     </div>
   </body>
 
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+  <!-- normal script imports etc  -->
+  <script src="./content/js/jquery-3.1.1.min.js"></script>
+  <script src="./content/js/bootstrap.min.js"></script>
+
+  <!-- Insert this line after script imports -->
+  <script>if (window.module) module = window.module;</script>
   <script>
     require('./renderer.js')
   </script>
