@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "build --dir --win --x64",
-    "dist-win": "build --win --x64",
+    "dist-win": "build --win --x64"
   },
   "author": "Patrick Greer",
   "email": "p.greer688@gmail.com",
