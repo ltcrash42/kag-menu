@@ -16,7 +16,7 @@
   "repository": "https://github.com/ltcrash42/kag-menu",
   "setup_icon": "https://github.com/ltcrash42/kag-menu/blob/master/build/icon.ico",
   "devDependencies": {
-    "electron": "^1.4.1",
+    "electron": "^9.1.0",
     "electron-builder": "^12.3.1",
     "electron-builder-squirrel-windows": "^13.2.0",
     "electron-winstaller": "^2.5.2"
