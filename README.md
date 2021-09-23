@@ -16,3 +16,5 @@ Building (Windows Only)
 ```sh
   $ npm run dist-win
 ```
+
+Feature Test
